@@ -1,0 +1,12 @@
+.bash_history
+.cache/
+config/
+.gitconfig
+.vscode/
+.idea/
+*.log
+*.exe
+*.pdb
+build/
+Debug/
+Release/
