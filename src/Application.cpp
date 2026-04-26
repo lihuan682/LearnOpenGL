@@ -46,7 +46,7 @@ int main()
 	}
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); 
 	glfwSetErrorCallback(error_callback);
 
 
@@ -114,16 +114,36 @@ int main()
 
 
 	glm::vec3 cubePositions[] = {
-  glm::vec3(0.0f,  0.0f,  0.0f),
-  glm::vec3(1.0f,  0.0f, 0.0f),
-  glm::vec3(2.0f, 0.0f, 0.0f),
-  glm::vec3(-1.0f, 0.0f, 0.0f),
-  glm::vec3(-2.0f, 0.0f, 0.0f),
-  glm::vec3(0.0f,  1.0f,0.0f),
-  glm::vec3(0.0f, 2.0f, 0.0f),
-  glm::vec3(0.0f, -1.0f, 0.0f),
-  glm::vec3(0.0f, -2.0f, 0.0f),
-  glm::vec3(0.0f, -3.0f, 0.0f)
+	glm::vec3(0.0f,  0.0f,  0.0f),
+	glm::vec3(0.0f,  0.0f,  1.0f),
+	glm::vec3(0.0f,  0.0f,  2.0f),
+	glm::vec3(0.0f,  1.0f,  0.0f),
+	glm::vec3(0.0f,  1.0f,  1.0f),
+	glm::vec3(0.0f,  1.0f,  2.0f),
+	glm::vec3(0.0f,  2.0f,  0.0f),
+	glm::vec3(0.0f,  2.0f,  1.0f),
+	glm::vec3(0.0f,  2.0f,  2.0f),
+
+	glm::vec3(1.0f,  0.0f,  0.0f),
+	glm::vec3(1.0f,  0.0f,  1.0f),
+	glm::vec3(1.0f,  0.0f,  2.0f),
+	glm::vec3(1.0f,  1.0f,  0.0f),
+	glm::vec3(1.0f,  1.0f,  1.0f),
+	glm::vec3(1.0f,  1.0f,  2.0f),
+	glm::vec3(1.0f,  2.0f,  0.0f),
+	glm::vec3(1.0f,  2.0f,  1.0f),
+	glm::vec3(1.0f,  2.0f,  2.0f),
+
+	glm::vec3(2.0f,  0.0f,  0.0f),
+	glm::vec3(2.0f,  0.0f,  1.0f),
+	glm::vec3(2.0f,  0.0f,  2.0f),
+	glm::vec3(2.0f,  1.0f,  0.0f),
+	glm::vec3(2.0f,  1.0f,  1.0f),
+	glm::vec3(2.0f,  1.0f,  2.0f),
+	glm::vec3(2.0f,  2.0f,  0.0f),
+	glm::vec3(2.0f,  2.0f,  1.0f),
+	glm::vec3(2.0f,  2.0f,  2.0f),
+
 	};
 
 
@@ -133,13 +153,14 @@ int main()
 	};
 	float borderColor[] = { 1.0f,1.0f,0.f,1.0f };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
 
-	
+
 
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
@@ -156,9 +177,11 @@ int main()
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void*)(3* sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)12);
 	glEnableVertexAttribArray(1);
 
 	unsigned int texture1;
@@ -171,7 +194,7 @@ int main()
 	glGenerateMipmap(GL_TEXTURE_2D);
 	stbi_image_free(data);
 	
-	unsigned int texture2;
+	unsigned int texture2; 
 	int width1, height1, nrChannels1;
 	glActiveTexture(GL_TEXTURE1);
 	unsigned char* data1 = stbi_load("res/TEXTURE/face.png", &width1, &height1, &nrChannels1, 0);
@@ -214,10 +237,10 @@ int main()
 
 
 
-	unsigned int FragmentShader;
+unsigned int FragmentShader;
 	const char* fragmentShaderSource = "#version 330 core\n"
 		"out vec4 FragColor;\n"
-		"in vec2 TexCoord;\n"
+		"in vec2 TexCoord;\n"  
 		"uniform sampler2D texture1;\n"
 		"uniform sampler2D texture2;\n"
 		"void main()\n"
@@ -295,7 +318,7 @@ int main()
 		glBindVertexArray(VAO);
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		
-		for (unsigned int i = 0; i < 10; i++)
+		for (unsigned int i = 0; i <27; i++)
 		{
 			glm::mat4 model(1.0f);
 			projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);

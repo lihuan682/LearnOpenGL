@@ -27,6 +27,24 @@
     <ClCompile Include="res\glm\detail\glm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\VBO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EBO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VAO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Program.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="res\GLEW\include\GL\eglew.h">
@@ -914,6 +932,27 @@
     <ClInclude Include="res\glm\detail\type_vec4.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\VBO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EBO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VAO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VertexBufferLayout.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Program.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="res\GLEW\lib\Release\Win32\glew32.lib" />
@@ -1351,5 +1390,6 @@
       <Filter>头文件</Filter>
     </None>
     <None Include=".gitignore" />
+    <None Include="res\Shader.shader" />
   </ItemGroup>
 </Project>
