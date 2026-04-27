@@ -54,7 +54,7 @@ ShaderSource Program::ParseShaderSource(std::string fliepath)
 			ss[int(Type)] << line << "\n";
 		}
 	}
-	return {ss[1].str(), ss[2].str()}
+	return { ss[1].str(), ss[2].str() };
 }
 
 unsigned int Program::CreateProgram(std::string VertexShaderSource, std::string fragmentShaderSource)

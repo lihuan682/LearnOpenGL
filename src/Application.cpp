@@ -10,11 +10,12 @@
 #include"glm/gtc/type_ptr.hpp"
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-float lastX = 500, lastY = 500;
+float lastX = 500, lastY = 400;
 float yaw=-90;
 float pitch=0;
 bool firstMouse = false;
 float fov = 45;
+
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -64,7 +65,7 @@ int main()
 		return -1;
 	}
 
-	glfwSetKeyCallback(window, key_callback);
+	
 	//Init Data
 
 	stbi_set_flip_vertically_on_load(true);
@@ -283,7 +284,7 @@ unsigned int FragmentShader;
 	
 	
 	glm::mat4 view(1.0f);
-	view=glm::translate(view, glm::vec3(0.f, 0.f,-3.0f));
+
 	glm::mat4 projection(1.0f);
 	projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
 	int modelLoc = glGetUniformLocation(ShaderProgram, "model");
@@ -292,6 +293,8 @@ unsigned int FragmentShader;
 	
 		
 	glEnable(GL_DEPTH_TEST);
+
+	glfwSetKeyCallback(window, key_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
@@ -314,7 +317,6 @@ unsigned int FragmentShader;
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.02, 0.01, 0.08, 1.0f);
 		glUseProgram(ShaderProgram);
-	  //glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		
