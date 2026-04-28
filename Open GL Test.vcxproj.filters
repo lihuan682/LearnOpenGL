@@ -961,14 +961,6 @@
     <Library Include="res\GLFW\lib-vc2022\glew32s.lib" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\TEXTURE\container.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\TEXTURE\face.png">
-      <Filter>资源文件</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="res\glm\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -1391,5 +1383,13 @@
     </None>
     <None Include=".gitignore" />
     <None Include="res\Shader.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\TEXTURE\container.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\TEXTURE\face.png">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

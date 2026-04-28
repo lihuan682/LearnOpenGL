@@ -454,13 +454,6 @@
     <Library Include="res\GLFW\lib-vc2022\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\TEXTURE\container.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="res\TEXTURE\face.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="res\glm\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -605,6 +598,10 @@
     <None Include="res\glm\gtx\vector_query.inl" />
     <None Include="res\glm\gtx\wrap.inl" />
     <None Include="res\Shader.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\TEXTURE\container.png" />
+    <Image Include="res\TEXTURE\face.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

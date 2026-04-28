@@ -6,11 +6,9 @@
 class Camera
 {
 public:
-	Camera(GLFWwindow* window);
+	Camera();
 	~Camera();
-
 	void Updata(float delta);
-	void SetCallBack(GLFWwindow*window);
 
 
 	glm::vec3 WorldX = glm::vec3(1.0, 0.0, 0.0);

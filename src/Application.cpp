@@ -38,6 +38,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow*, double xoffset, double yyoffset);
 
 
+
 int main()
 {//Init Context
 	if (!glfwInit())
@@ -70,47 +71,47 @@ int main()
 
 	stbi_set_flip_vertically_on_load(true);
 	float Vertices[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,0.0f,-1.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,0.0f,-1.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,0.0f,-1.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,0.0f,-1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,0.0f,-1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,0.0f,-1.0f,
 
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,0.0f,1.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,0.0f,1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,0.0f,1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,0.0f,1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,0.0f,1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,0.0f,1.0f,
 
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,0.0f,0.0f,
+	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, -1.0f,0.0f,0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,0.0f,0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,0.0f,0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, -1.0f,0.0f,0.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,0.0f,0.0f,
 
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  1.0f,0.0f,0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  1.0f,0.0f,0.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  1.0f,0.0f,0.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  1.0f,0.0f,0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  1.0f,0.0f,0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  1.0f,0.0f,0.0f,
 
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f,-1.0f,0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  0.0f,-1.0f,0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f,-1.0f,0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f,-1.0f,0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  0.0f,-1.0f,0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f,-1.0f,0.0f,
 
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,1.0f,0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  0.0f,1.0f,0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,1.0f,0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,1.0f,0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,  0.0f,1.0f,0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,1.0f,0.0f
 	};
 
 
@@ -124,7 +125,6 @@ int main()
 	glm::vec3(0.0f,  2.0f,  0.0f),
 	glm::vec3(0.0f,  2.0f,  1.0f),
 	glm::vec3(0.0f,  2.0f,  2.0f),
-
 	glm::vec3(1.0f,  0.0f,  0.0f),
 	glm::vec3(1.0f,  0.0f,  1.0f),
 	glm::vec3(1.0f,  0.0f,  2.0f),
@@ -154,7 +154,6 @@ int main()
 	};
 	float borderColor[] = { 1.0f,1.0f,0.f,1.0f };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -180,10 +179,12 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
 
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)12);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)12);
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)20);
+	glEnableVertexAttribArray(2);
 
 	unsigned int texture1;
 	glActiveTexture(GL_TEXTURE0);
@@ -214,7 +215,10 @@ int main()
 	const char* vertexShaderSource = "#version 330 core\n"
 		"layout(location=0) in vec3 aPos;\n"
 		"layout(location=1) in vec2 aTexCoord;\n"
+		"layout(location=2) in vec3 aNormal;\n"
 		"out vec2 TexCoord;\n"
+		"out vec3 Normal;\n"
+		"out vec3 FragPos;\n"
 		"uniform mat4 model;\n"
 		"uniform mat4 view;\n"
 		"uniform mat4 projection;\n"
@@ -222,7 +226,9 @@ int main()
 		"{\n"
 		"gl_Position=projection*view*model*vec4(aPos,1.0);\n"
 		"TexCoord=aTexCoord;\n"
-		"}\0";
+		"FragPos=vec3(model*vec4(aPos,1.0));"
+		"Normal=aNormal;\n"
+		"}\n";
 	unsigned int VertexShader;
 	VertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(VertexShader, 1, &vertexShaderSource, NULL);
@@ -233,20 +239,59 @@ int main()
 	if (!success)
 	{
 		glGetShaderInfoLog(VertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::cout << "ERROR::SHADER::Vertex::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
-
-
+//"	"FragColor=mix(texture(texture1,TexCoord),texture(texture2,TexCoord),1.0);\n"(light.direction)
 unsigned int FragmentShader;
 	const char* fragmentShaderSource = "#version 330 core\n"
+		"struct Material{\n"
+		"vec3 ambient;\n"
+		"sampler2D diffuse;\n"
+		"sampler2D specular;\n"
+		"float shininess;\n"
+		"};\n"
+		"struct Light{\n"
+		"vec3 direction;\n"
+		"vec3 position;\n"
+		"vec3 ambient;\n"
+		"vec3 diffuse;\n"
+		"vec3 specular;\n"
+		"float constant;\n"
+		"float linear;\n"
+		"float quadratic;\n"
+		"float Cutoff;\n"
+		"};\n"
 		"out vec4 FragColor;\n"
-		"in vec2 TexCoord;\n"  
-		"uniform sampler2D texture1;\n"
-		"uniform sampler2D texture2;\n"
+		"in vec2 TexCoord;\n"
+		"in vec3 Normal;\n"
+		"in vec3 FragPos;\n"
+		"uniform Material material;\n"
+		"uniform Light light;\n"
+		"uniform vec3 viewPos;\n"
 		"void main()\n"
 		"{\n"
-		"FragColor =mix(texture(texture1,TexCoord),texture(texture2,TexCoord),0.2);\n"
+		"float distance=length(light.position - FragPos);\n"
+		"float attenuation=1.0/(light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
+		"vec3 norm=normalize(Normal);\n"
+		"vec3 lightDir =normalize(light.position-FragPos);\n"
+		"float theta = dot(lightDir, normalize(-light.direction));\n"
+		"if(theta>light.Cutoff)\n"
+		"{\n"
+		"float diff =max(dot(norm,lightDir),0.0);\n"
+		"vec3 diffuse=diff*light.diffuse*texture(material.diffuse,TexCoord).rgb;\n"
+		"vec3 viewDir = normalize(viewPos - FragPos);\n"
+		"vec3 reflectDir =reflect(-lightDir,norm);\n"
+		"float spec=pow(max(dot(viewDir,reflectDir),0.0),material.shininess);\n"
+		"vec3 specular=texture(material.specular,TexCoord).rgb*spec*light.specular;\n"
+		"vec3 ambient=vec3(texture(material.diffuse, TexCoord))*light.ambient;\n"
+		"ambient  *= attenuation;\n"
+		"diffuse  *= attenuation;\n"
+		"specular *= attenuation;\n"
+		"FragColor=vec4(ambient+diffuse+specular,1.0);\n"
+		"}\n"
+		"else\n"
+		"FragColor = vec4(light.ambient * vec3(texture(material.diffuse, TexCoord)), 1.0);\n"
 		"}\n";
 	FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(FragmentShader, 1, &fragmentShaderSource, NULL);
@@ -255,7 +300,7 @@ unsigned int FragmentShader;
 	if (!success)
 	{
 		glGetShaderInfoLog(FragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::cout << "ERROR::SHADER::Fragment::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
     
 
@@ -278,8 +323,6 @@ unsigned int FragmentShader;
 	glBindVertexArray(VAO);
 	double time = glfwGetTime();
 
-	glUniform1i(glGetUniformLocation(ShaderProgram, "texture1"), 0);
-	glUniform1i(glGetUniformLocation(ShaderProgram, "texture2"), 1);
 	unsigned int  transformLoc = glGetUniformLocation(ShaderProgram, "transform");
 	
 	
@@ -291,9 +334,8 @@ unsigned int FragmentShader;
 	int viewLoc = glGetUniformLocation(ShaderProgram, "view");
 	int projectionlLoc = glGetUniformLocation(ShaderProgram, "projection");
 	
-		
-	glEnable(GL_DEPTH_TEST);
 
+	glEnable(GL_DEPTH_TEST);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
@@ -301,9 +343,61 @@ unsigned int FragmentShader;
 
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
+	unsigned int CameraLoc = glGetUniformLocation(ShaderProgram, "viewPos");
 	
 
+	struct Material
+	{
+		glm::vec3 ambient;
+		glm::vec3 specular;
+		float shininess;
+	};
+	struct Light
+	{
+		glm::vec3 direction;
+		glm::vec3 position;
+		glm::vec3 ambient;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+		float constant;
+		float linear;
+		float quadratic;
+		float Cutoff;
+	};
+
+	Material material = {
+	glm::vec3(0.75,0.75,0.85),
+	glm::vec3(0.75,0.75,0.85),
+	128.f
+	};
+	Light light = {
+	glm::vec3(1.0,1.0,1.0),
+	glm::vec3(-2,0,0),
+	glm::vec3(0.2,0.2,0.2),
+	glm::vec3(1.0,1.0,1.0),
+	glm::vec3(2.0,2.0,2.0),
+	1.0f,
+	0.09f,
+	0.032f,
+	glm::cos(glm::radians(12.5f))
+	};	glUniform3fv(glGetUniformLocation(ShaderProgram, "material.ambient"), 1, &material.ambient[0]);
+	glUniform1i(glGetUniformLocation(ShaderProgram, "material.diffuse"),0);
+	glUniform1i(glGetUniformLocation(ShaderProgram, "material.specular"), 1);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "material.shininess"),material.shininess);
+
+	std::cout << glGetUniformLocation(ShaderProgram, "light.position") << std::endl;
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "light.direction"), 1, &light.direction[0]);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "light.position"), 1, &light.position[0]);
+
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "light.ambient"), 1, &light.ambient[0]);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "light.diffuse"), 1, &light.diffuse[0]);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "light.specular"), 1, &light.specular[0]);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "light.constant"), light.constant);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "light.linear"), light.linear);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "light.quadratic"), light.quadratic);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "light.Cutoff"), light.Cutoff);
+
+	glfwSwapInterval(4);
 	while (!glfwWindowShouldClose(window))
 	{	
 		
@@ -327,9 +421,11 @@ unsigned int FragmentShader;
 			model = glm::translate(model, cubePositions[i]);
 			view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 			float angle = 20.0f+glfwGetTime()*20.0f;
-			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-				glUniformMatrix4fv(projectionlLoc, 1, GL_FALSE, glm::value_ptr(projection));
+			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+			glUniformMatrix4fv(projectionlLoc, 1, GL_FALSE, glm::value_ptr(projection));
+			glUniform3fv(CameraLoc, 1,&cameraPos[0]);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -340,7 +436,7 @@ unsigned int FragmentShader;
 }
 void processInput(GLFWwindow* window)
 {
-		float cameraSpeed =10.f*deltaTime; 
+		float cameraSpeed =2.f*deltaTime; 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		cameraPos += cameraSpeed * cameraFront;
 	if(glfwGetKey(window,GLFW_KEY_S)==GLFW_PRESS)
