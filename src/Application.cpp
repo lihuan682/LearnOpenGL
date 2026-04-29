@@ -251,6 +251,13 @@ unsigned int FragmentShader;
 		"sampler2D specular;\n"
 		"float shininess;\n"
 		"};\n"
+		"struct DirLight{\n"
+		"vec3 direction;\n"
+		"vec3 ambient;\n"
+		"vec3 diffuse;\n"
+		"vec3 specular;\n"
+		"}\n"
+		"uniform DirLight dirLight;\n"
 		"struct Light{\n"
 		"vec3 direction;\n"
 		"vec3 position;\n"
@@ -261,6 +268,7 @@ unsigned int FragmentShader;
 		"float linear;\n"
 		"float quadratic;\n"
 		"float Cutoff;\n"
+		"float outCutoff;\n"
 		"};\n"
 		"out vec4 FragColor;\n"
 		"in vec2 TexCoord;\n"
@@ -276,22 +284,21 @@ unsigned int FragmentShader;
 		"vec3 norm=normalize(Normal);\n"
 		"vec3 lightDir =normalize(light.position-FragPos);\n"
 		"float theta = dot(lightDir, normalize(-light.direction));\n"
-		"if(theta>light.Cutoff)\n"
-		"{\n"
+		"float epsilon=light.Cutoff-light.outCutoff;\n"
+		"float intensity=clamp((theta-light.outCutoff)/epsilon,0.0,1.0);\n"
 		"float diff =max(dot(norm,lightDir),0.0);\n"
 		"vec3 diffuse=diff*light.diffuse*texture(material.diffuse,TexCoord).rgb;\n"
 		"vec3 viewDir = normalize(viewPos - FragPos);\n"
 		"vec3 reflectDir =reflect(-lightDir,norm);\n"
 		"float spec=pow(max(dot(viewDir,reflectDir),0.0),material.shininess);\n"
 		"vec3 specular=texture(material.specular,TexCoord).rgb*spec*light.specular;\n"
-		"vec3 ambient=vec3(texture(material.diffuse, TexCoord))*light.ambient;\n"
+		"vec3 ambient=vec3(texture(material.diffuse, TexCoord)   )*light.ambient;\n"
 		"ambient  *= attenuation;\n"
 		"diffuse  *= attenuation;\n"
 		"specular *= attenuation;\n"
+		"specular *=intensity;\n"
+		"diffuse*=intensity;\n"
 		"FragColor=vec4(ambient+diffuse+specular,1.0);\n"
-		"}\n"
-		"else\n"
-		"FragColor = vec4(light.ambient * vec3(texture(material.diffuse, TexCoord)), 1.0);\n"
 		"}\n";
 	FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(FragmentShader, 1, &fragmentShaderSource, NULL);
@@ -363,6 +370,7 @@ unsigned int FragmentShader;
 		float linear;
 		float quadratic;
 		float Cutoff;
+		float outCutoff;
 	};
 
 	Material material = {
@@ -379,7 +387,8 @@ unsigned int FragmentShader;
 	1.0f,
 	0.09f,
 	0.032f,
-	glm::cos(glm::radians(12.5f))
+	glm::cos(glm::radians(12.5f)),
+	glm::cos(glm::radians(30.f))
 	};	glUniform3fv(glGetUniformLocation(ShaderProgram, "material.ambient"), 1, &material.ambient[0]);
 	glUniform1i(glGetUniformLocation(ShaderProgram, "material.diffuse"),0);
 	glUniform1i(glGetUniformLocation(ShaderProgram, "material.specular"), 1);
@@ -396,8 +405,8 @@ unsigned int FragmentShader;
 	glUniform1f(glGetUniformLocation(ShaderProgram, "light.linear"), light.linear);
 	glUniform1f(glGetUniformLocation(ShaderProgram, "light.quadratic"), light.quadratic);
 	glUniform1f(glGetUniformLocation(ShaderProgram, "light.Cutoff"), light.Cutoff);
-
-	glfwSwapInterval(4);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "light.outCutoff"), light.outCutoff);
+	glfwSwapInterval(1);
 	while (!glfwWindowShouldClose(window))
 	{	
 		
