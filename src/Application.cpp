@@ -8,6 +8,7 @@
 #include"glm/glm.hpp"
 #include"glm/gtc/matrix_transform.hpp"
 #include"glm/gtc/type_ptr.hpp"
+#include<string>
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 float lastX = 500, lastY = 400;
@@ -134,7 +135,6 @@ int main()
 	glm::vec3(1.0f,  2.0f,  0.0f),
 	glm::vec3(1.0f,  2.0f,  1.0f),
 	glm::vec3(1.0f,  2.0f,  2.0f),
-
 	glm::vec3(2.0f,  0.0f,  0.0f),
 	glm::vec3(2.0f,  0.0f,  1.0f),
 	glm::vec3(2.0f,  0.0f,  2.0f),
@@ -145,6 +145,7 @@ int main()
 	glm::vec3(2.0f,  2.0f,  1.0f),
 	glm::vec3(2.0f,  2.0f,  2.0f),
 
+	glm::vec3(4,4,4)
 	};
 
 
@@ -212,6 +213,17 @@ int main()
 	stbi_image_free(data1);
 
 
+	unsigned int texture3;
+	int width2, height2, nrChannels2;
+	unsigned char* data2 = stbi_load("res/TEXTURE/face1.png", &width2, &height2, &nrChannels2, 0);
+	glGenTextures(1, &texture3);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D,texture3);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width2, height2, 0, GL_RGBA,GL_UNSIGNED_BYTE,data2);
+	glBindTexture(GL_TEXTURE_2D, texture3);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	stbi_image_free(data2);
+
 	const char* vertexShaderSource = "#version 330 core\n"
 		"layout(location=0) in vec3 aPos;\n"
 		"layout(location=1) in vec2 aTexCoord;\n"
@@ -245,60 +257,120 @@ int main()
 //"	"FragColor=mix(texture(texture1,TexCoord),texture(texture2,TexCoord),1.0);\n"(light.direction)
 unsigned int FragmentShader;
 	const char* fragmentShaderSource = "#version 330 core\n"
+		"out vec4 FragColor;\n"
+		"in vec2 TexCoord;\n"
+		"in vec3 Normal;\n"
+		"in vec3 FragPos;\n"
+
 		"struct Material{\n"
 		"vec3 ambient;\n"
 		"sampler2D diffuse;\n"
 		"sampler2D specular;\n"
 		"float shininess;\n"
 		"};\n"
+		
 		"struct DirLight{\n"
 		"vec3 direction;\n"
 		"vec3 ambient;\n"
 		"vec3 diffuse;\n"
 		"vec3 specular;\n"
-		"}\n"
-		"uniform DirLight dirLight;\n"
-		"struct Light{\n"
-		"vec3 direction;\n"
-		"vec3 position;\n"
+		"};\n"
+
+		"struct PointLight{\n"
 		"vec3 ambient;\n"
 		"vec3 diffuse;\n"
 		"vec3 specular;\n"
+		"vec3 position;\n"
 		"float constant;\n"
 		"float linear;\n"
 		"float quadratic;\n"
-		"float Cutoff;\n"
-		"float outCutoff;\n"
 		"};\n"
-		"out vec4 FragColor;\n"
-		"in vec2 TexCoord;\n"
-		"in vec3 Normal;\n"
-		"in vec3 FragPos;\n"
-		"uniform Material material;\n"
-		"uniform Light light;\n"
+
+		"struct SpotLight{\n"
+		"vec3 position;\n"
+		"vec3 direction;\n"
+		"vec3 diffuse;\n"
+		"vec3 ambient;\n"
+		"float constant;\n"
+		"float linear;\n"
+		"float quadratic;\n"
+		"vec3 specular;\n"
+		"float CutOff;\n"
+		"float OutCutOff;\n"
+		"};\n"
+
 		"uniform vec3 viewPos;\n"
+		"uniform DirLight dirLight;\n"
+		"uniform SpotLight spotLight;\n"
+		"#define NR_POINT_LIGHTS 6\n"
+		"uniform PointLight pointLights[NR_POINT_LIGHTS];\n"
+		"uniform Material material;\n"
+		"uniform sampler2D face;\n"
+
+		"vec3 CalcSpotLight(SpotLight light,vec3 normal,vec3 fragPos,vec3 viewDir)\n"
+		"{\n"
+		"float distance=length(light.position-fragPos);\n"
+		"vec3 lightDir=normalize(light.position-fragPos);\n"
+		"float diff=max(dot(normal,lightDir),0.0);\n"
+		"vec3 reflectDir=reflect(-lightDir,normal);\n"
+		"float spec=pow(max(dot(reflectDir,viewDir),0.0),material.shininess);\n"
+		"float theta=dot(lightDir, normalize(-light.direction));\n"
+		"float epsilon=light.CutOff-light.OutCutOff;\n"
+		"float intensity=clamp((theta-light.OutCutOff)/epsilon,0.0,1.0);\n"
+		"float attenuation=1.0/(light.constant+light.linear*distance+light.quadratic*distance*distance);\n"
+		"vec3 ambient=light.ambient*vec3(texture(material.diffuse,TexCoord));\n"
+		"vec3 diffuse=light.diffuse*vec3(texture(material.diffuse,TexCoord));\n"
+		"vec3 specular=light.specular*vec3(texture(material.specular,TexCoord))*spec;\n"
+		"ambient*=attenuation;\n"
+		"diffuse*=attenuation;\n"
+		"specular*=attenuation;\n"
+		"ambient*=intensity;\n"
+		"diffuse*=intensity;\n"
+		"specular*=intensity;\n"
+		"return (ambient+diffuse+specular);\n"
+		"}\n"
+
+		"vec3 CalcDirLight(DirLight light,vec3 normal,vec3 viewDir)\n"
+		"{\n"
+		"vec3 lightDir=normalize(-light.direction);\n"
+		"float diff=max(dot(normal,lightDir),0.0);\n"
+		"vec3 reflectDir=reflect(-lightDir,normal);\n"
+		"float spec=pow(max(dot(viewDir,reflectDir),0.0),material.shininess);\n"
+		"vec3 ambient=light.ambient*vec3(texture(material.diffuse,TexCoord));\n"
+		"vec3 diffuse=light.diffuse*vec3(texture(material.diffuse,TexCoord))*diff;\n"
+		"vec3 specular=light.specular*vec3(texture(material.specular,TexCoord))*spec;\n"
+		"return (ambient+diffuse+specular);\n"
+		"}\n"
+
+		"vec3 CalcPointLight(PointLight light,vec3 normal,vec3 fragPos,vec3 viewDir)\n"
+		"{\n"
+		"vec3 lightDir=normalize(light.position-fragPos);\n"
+		"float diff=max(dot(normal,lightDir),0.0);\n"
+		"vec3 reflectDir=reflect(-lightDir,normal);\n"
+		"float spec=pow(max(dot(viewDir,reflectDir),0.0),material.shininess);\n"
+		"float distance=length(light.position-fragPos);\n"
+		"float attenuation=1.0/(light.constant+light.linear*distance+light.quadratic*distance*distance);\n"
+		"vec3 ambient=light.ambient*vec3(texture(material.diffuse,TexCoord));\n"
+		"vec3 diffuse=light.diffuse*vec3(texture(material.diffuse,TexCoord));\n"
+		"vec3 specular=light.specular*vec3(texture(material.specular,TexCoord))*spec;\n"
+		"ambient*=attenuation;\n"
+		"diffuse*=attenuation;\n"
+		"specular*=attenuation;\n"
+		"return (ambient+diffuse+specular);\n"
+		"}\n"
+
+
+
 		"void main()\n"
 		"{\n"
-		"float distance=length(light.position - FragPos);\n"
-		"float attenuation=1.0/(light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
 		"vec3 norm=normalize(Normal);\n"
-		"vec3 lightDir =normalize(light.position-FragPos);\n"
-		"float theta = dot(lightDir, normalize(-light.direction));\n"
-		"float epsilon=light.Cutoff-light.outCutoff;\n"
-		"float intensity=clamp((theta-light.outCutoff)/epsilon,0.0,1.0);\n"
-		"float diff =max(dot(norm,lightDir),0.0);\n"
-		"vec3 diffuse=diff*light.diffuse*texture(material.diffuse,TexCoord).rgb;\n"
-		"vec3 viewDir = normalize(viewPos - FragPos);\n"
-		"vec3 reflectDir =reflect(-lightDir,norm);\n"
-		"float spec=pow(max(dot(viewDir,reflectDir),0.0),material.shininess);\n"
-		"vec3 specular=texture(material.specular,TexCoord).rgb*spec*light.specular;\n"
-		"vec3 ambient=vec3(texture(material.diffuse, TexCoord)   )*light.ambient;\n"
-		"ambient  *= attenuation;\n"
-		"diffuse  *= attenuation;\n"
-		"specular *= attenuation;\n"
-		"specular *=intensity;\n"
-		"diffuse*=intensity;\n"
-		"FragColor=vec4(ambient+diffuse+specular,1.0);\n"
+		"vec3 viewDir=normalize(viewPos-FragPos);\n"
+		"vec3 result;\n"
+		"result=CalcDirLight(dirLight,norm,viewDir);\n"
+		"for(int i=0;i<NR_POINT_LIGHTS;i++)\n"
+		"result+=CalcPointLight(pointLights[i],norm,FragPos,viewDir);\n"
+		"result+=CalcSpotLight(spotLight,norm,FragPos,viewDir);\n"
+		"FragColor=vec4(result,1.0);\n"
 		"}\n";
 	FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(FragmentShader, 1, &fragmentShaderSource, NULL);
@@ -310,6 +382,19 @@ unsigned int FragmentShader;
 		std::cout << "ERROR::SHADER::Fragment::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
     
+	const char* SunShaderSource =
+		"#version 330 core\n"
+		"out vec4 FragColor;\n"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"    FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n"
+		"}\n";
+	unsigned int Sun = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(Sun, 1, &SunShaderSource, NULL);
+	glCompileShader(Sun);
+
+
 
 	unsigned int ShaderProgram;
 	ShaderProgram = glCreateProgram();
@@ -319,9 +404,16 @@ unsigned int FragmentShader;
 	glGetProgramiv(ShaderProgram, GL_LINK_STATUS, &success);
 	glGetProgramInfoLog(ShaderProgram, 512, NULL, infoLog);
 	glUseProgram(ShaderProgram);
-	glDeleteShader(VertexShader);
+	
 	glDeleteShader(FragmentShader);
 
+
+	unsigned int SunProgram = glCreateProgram();
+	glAttachShader(SunProgram, Sun);
+	glAttachShader(SunProgram, VertexShader);
+	glLinkProgram(SunProgram);
+	glDeleteShader(VertexShader);
+	glDeleteShader(Sun);
 
 	int Width, Height;
 	glfwGetFramebufferSize(window, &Width, &Height);
@@ -353,59 +445,115 @@ unsigned int FragmentShader;
 	unsigned int CameraLoc = glGetUniformLocation(ShaderProgram, "viewPos");
 	
 
+	
+	
 	struct Material
 	{
 		glm::vec3 ambient;
 		glm::vec3 specular;
 		float shininess;
 	};
-	struct Light
-	{
+	
+	Material material = {
+	glm::vec3(0.01,0.01,0.01),
+	glm::vec3(1.f,1.f,1.f),
+	128.f
+	};
+
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "material.ambient"), 1, &material.ambient[0]);
+	glUniform1i(glGetUniformLocation(ShaderProgram, "material.diffuse"),0);
+	glUniform1i(glGetUniformLocation(ShaderProgram, "material.specular"), 1);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "material.shininess"),material.shininess);
+struct DirLight {
 		glm::vec3 direction;
-		glm::vec3 position;
 		glm::vec3 ambient;
 		glm::vec3 diffuse;
+		glm::vec3 specular;
+	};
+
+	DirLight dirlight = {
+	glm::vec3(0.f, 0.0f, -1.f), // direction
+	glm::vec3(0.1f, 0.1f, 0.1f), // ambient
+	glm::vec3(0.4f, 0.4f, 0.4f),    // diffuse
+	glm::vec3(1.f, 1.f, 1.f)     // specular
+	};
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "dirLight.direction"), 1, &dirlight.direction[0]);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "dirLight.ambient"), 1, &dirlight.ambient[0]);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "dirLight.diffuse"), 1, &dirlight.diffuse[0]);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "dirLight.specular"), 1, &dirlight.specular[0]);
+	
+	struct PointLight {
+		glm::vec3 ambient;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+		glm::vec3 position;
+		float constant;
+		float linear;
+		float quadratic;
+	};
+		PointLight pointlight = {
+		glm::vec3(1.0f,1.0f,1.0f),  // ambient
+		glm::vec3(1.0f,1.0f,1.0f),   // diffuse
+		glm::vec3(1.00f,1.00f,1.00f),   // specular
+		glm::vec3(-1.f,1.f, -1.f), // position
+		1.0f,   // constant
+		5.f,  // linear
+		10.f  // quadratic
+	};
+	for (int i = 0;i < 6;i++)
+	{
+		std::string idx = std::to_string(i);
+
+		glUniform3fv(glGetUniformLocation(ShaderProgram, ("pointLights[" + idx + "].position").c_str()), 1, &pointlight.position[0]);
+		glUniform3fv(glGetUniformLocation(ShaderProgram, ("pointLights[" + idx + "].ambient").c_str()), 1, &pointlight.ambient[0]);
+		glUniform3fv(glGetUniformLocation(ShaderProgram, ("pointLights[" + idx + "].diffuse").c_str()), 1, &pointlight.diffuse[0]);
+		glUniform3fv(glGetUniformLocation(ShaderProgram, ("pointLights[" + idx + "].specular").c_str()), 1, &pointlight.specular[0]);
+
+		glUniform1f(glGetUniformLocation(ShaderProgram, ("pointLights[" + idx + "].constant").c_str()), pointlight.constant);
+		glUniform1f(glGetUniformLocation(ShaderProgram, ("pointLights[" + idx + "].linear").c_str()), pointlight.linear);
+		glUniform1f(glGetUniformLocation(ShaderProgram, ("pointLights[" + idx + "].quadratic").c_str()), pointlight.quadratic);
+	}
+
+	struct SpotLight {
+		glm::vec3 position;
+		glm::vec3 direction;
+		glm::vec3 diffuse;
+		glm::vec3 ambient;
 		glm::vec3 specular;
 		float constant;
 		float linear;
 		float quadratic;
-		float Cutoff;
-		float outCutoff;
+		float CutOff;
+		float OutCutOff;
 	};
-
-	Material material = {
-	glm::vec3(0.75,0.75,0.85),
-	glm::vec3(0.75,0.75,0.85),
-	128.f
+	SpotLight spotlight = {
+		cameraPos,          // position
+		cameraFront,        // direction
+		glm::vec3(1.0f,1.0f,1.0f),    // diffuse
+		glm::vec3(1.0f,1.0f,1.0f),   // ambient
+		glm::vec3(1.00f,1.00f,1.00f),    // specular
+		1.0f,
+		0.09f,
+		0.032f,
+		glm::cos(glm::radians(12.5f)), // CutOff
+		glm::cos(glm::radians(17.5f))  // OutCutOff
 	};
-	Light light = {
-	glm::vec3(1.0,1.0,1.0),
-	glm::vec3(-2,0,0),
-	glm::vec3(0.2,0.2,0.2),
-	glm::vec3(1.0,1.0,1.0),
-	glm::vec3(2.0,2.0,2.0),
-	1.0f,
-	0.09f,
-	0.032f,
-	glm::cos(glm::radians(12.5f)),
-	glm::cos(glm::radians(30.f))
-	};	glUniform3fv(glGetUniformLocation(ShaderProgram, "material.ambient"), 1, &material.ambient[0]);
-	glUniform1i(glGetUniformLocation(ShaderProgram, "material.diffuse"),0);
-	glUniform1i(glGetUniformLocation(ShaderProgram, "material.specular"), 1);
-	glUniform1f(glGetUniformLocation(ShaderProgram, "material.shininess"),material.shininess);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "spotLight.position"), 1, &spotlight.position[0]);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "spotLight.direction"), 1, &spotlight.direction[0]);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "spotLight.ambient"), 1, &spotlight.ambient[0]);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "spotLight.diffuse"), 1, &spotlight.diffuse[0]);
+	glUniform3fv(glGetUniformLocation(ShaderProgram, "spotLight.specular"), 1, &spotlight.specular[0]);
 
-	std::cout << glGetUniformLocation(ShaderProgram, "light.position") << std::endl;
-	glUniform3fv(glGetUniformLocation(ShaderProgram, "light.direction"), 1, &light.direction[0]);
-	glUniform3fv(glGetUniformLocation(ShaderProgram, "light.position"), 1, &light.position[0]);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "spotLight.constant"), spotlight.constant);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "spotLight.linear"), spotlight.linear);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "spotLight.quadratic"), spotlight.quadratic);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "spotLight.CutOff"), spotlight.CutOff);
+	glUniform1f(glGetUniformLocation(ShaderProgram, "spotLight.OutCutOff"), spotlight.OutCutOff);
 
-	glUniform3fv(glGetUniformLocation(ShaderProgram, "light.ambient"), 1, &light.ambient[0]);
-	glUniform3fv(glGetUniformLocation(ShaderProgram, "light.diffuse"), 1, &light.diffuse[0]);
-	glUniform3fv(glGetUniformLocation(ShaderProgram, "light.specular"), 1, &light.specular[0]);
-	glUniform1f(glGetUniformLocation(ShaderProgram, "light.constant"), light.constant);
-	glUniform1f(glGetUniformLocation(ShaderProgram, "light.linear"), light.linear);
-	glUniform1f(glGetUniformLocation(ShaderProgram, "light.quadratic"), light.quadratic);
-	glUniform1f(glGetUniformLocation(ShaderProgram, "light.Cutoff"), light.Cutoff);
-	glUniform1f(glGetUniformLocation(ShaderProgram, "light.outCutoff"), light.outCutoff);
+
+	
+	glUniform1i(glGetUniformLocation(ShaderProgram, "face"), 2);
+
 	glfwSwapInterval(1);
 	while (!glfwWindowShouldClose(window))
 	{	
@@ -423,7 +571,12 @@ unsigned int FragmentShader;
 		glBindVertexArray(VAO);
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		
-		for (unsigned int i = 0; i <27; i++)
+		glUniform3fv(glGetUniformLocation(ShaderProgram, "spotLight.position"), 1, &cameraPos[0]);
+		glUniform3fv(glGetUniformLocation(ShaderProgram, "spotLight.direction"), 1, &cameraFront[0]);
+
+		//dirlight.direction = { sin(glfwGetTime()), sin(glfwGetTime())+cos(glfwGetTime()),cos(glfwGetTime()) };
+		//glUniform3fv(glGetUniformLocation(ShaderProgram, "dirLight.direction"), 1, &dirlight.direction[0]);
+		for (unsigned int i = 0; i <28; i++)
 		{
 			glm::mat4 model(1.0f);
 			projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -435,6 +588,7 @@ unsigned int FragmentShader;
 			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 			glUniformMatrix4fv(projectionlLoc, 1, GL_FALSE, glm::value_ptr(projection));
 			glUniform3fv(CameraLoc, 1,&cameraPos[0]);
+
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

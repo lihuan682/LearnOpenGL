@@ -1391,5 +1391,8 @@
     <Image Include="res\TEXTURE\face.png">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\TEXTURE\face1.png">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
